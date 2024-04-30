@@ -1,9 +1,12 @@
-use crate::in_game::{ProblemCurrentRomajiText, ProblemHiraganaText, ProblemTitleText};
+use crate::in_game::{
+    LevelResource, ProblemCurrentRomajiText, ProblemHiraganaText, ProblemTitleText, UsedWordIndexes,
+};
 use crate::AppState;
 use bevy::app::App;
 use bevy::ecs::system::RunSystemOnce;
 use bevy::prelude::{
-    Color, Commands, Component, In, IntoSystem, Query, Res, Text, TextStyle, With, World,
+    Color, Commands, Component, In, IntoSystem, Query, Res, ResMut, Resource, Text, TextStyle,
+    With, World,
 };
 use bevy::prelude::{State, System};
 use bevy::text::TextSection;
@@ -14,28 +17,35 @@ use std::str::Chars;
 use std::vec::IntoIter;
 use successive_romaji::{parse_hiragana_with_buf, ParseResult};
 
+use crate::word_typing::choice_word::choice_word;
 use crate::word_typing::sharing::{get_sharing, key_char_to_num, Player};
 pub use sharing::key_num_to_char;
 
+mod choice_word;
 pub(crate) mod sharing;
+mod wordbook;
 
-#[derive(Component)]
+#[derive(Resource)]
 pub struct Title(pub String);
 
-#[derive(Component)]
+#[derive(Resource)]
 pub struct Hiragana(pub String);
 
-#[derive(Component)]
+#[derive(Resource)]
 pub struct CurrentRomaji(pub String);
 
-pub fn set_new_problem(mut commands: Commands) {
-    let title = "ずっと真夜中でいいのに。";
-    let hiragana = "ずっとまよなかでいいのに";
-    commands.spawn((
-        Title(title.to_string()),
-        Hiragana(hiragana.to_string()),
-        CurrentRomaji("".to_string()),
-    ));
+pub fn set_new_problem(
+    mut commands: Commands,
+    mut level_resource: ResMut<LevelResource>,
+    mut used_word_indexes_resource: ResMut<UsedWordIndexes>,
+) {
+    let word = choice_word(level_resource.0, &used_word_indexes_resource.0);
+
+    let title = word.0;
+    let hiragana = word.1;
+    commands.insert_resource(Title(title.to_string()));
+    commands.insert_resource(Hiragana(hiragana.to_string()));
+    commands.insert_resource(CurrentRomaji("".to_string()));
 }
 
 fn update_title_ui(In(title): In<String>, mut query: Query<&mut Text, With<ProblemTitleText>>) {
@@ -119,8 +129,9 @@ fn update_romaji_ui(
 }
 
 pub fn update_problem_ui(world: &mut World) {
-    let mut query = world.query::<(&Title, &Hiragana, &CurrentRomaji)>();
-    let (title, hiragana, current_romaji) = query.single(world);
+    let title = world.resource::<Title>();
+    let hiragana = world.resource::<Hiragana>();
+    let current_romaji = world.resource::<CurrentRomaji>();
     let (title, hiragana, current_romaji) = (
         title.0.clone(),
         hiragana.0.clone(),

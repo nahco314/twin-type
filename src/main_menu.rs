@@ -6,7 +6,7 @@ use bevy::prelude::{
     UiRect, Val,
 };
 
-use crate::in_game::Something;
+use crate::in_game::{Level, LevelResource, Something};
 use bevy::{
     diagnostic::{DiagnosticsStore, FrameTimeDiagnosticsPlugin},
     prelude::*,
@@ -15,7 +15,8 @@ use bevy::{
 #[derive(Component)]
 pub struct MainMenuUI;
 
-pub fn button_system(
+pub fn main_menu_button_system(
+    mut commands: Commands,
     mut interaction_query: Query<
         (
             &Interaction,
@@ -23,7 +24,7 @@ pub fn button_system(
             &mut BorderColor,
             &Children,
         ),
-        (Changed<Interaction>, With<Button>),
+        (Changed<Interaction>, With<Button>, With<MainMenuUI>),
     >,
     mut text_query: Query<&mut Text>,
     mut next_state: ResMut<NextState<AppState>>,
@@ -32,6 +33,7 @@ pub fn button_system(
         let mut text = text_query.get_mut(children[0]).unwrap();
         match *interaction {
             Interaction::Pressed => {
+                commands.insert_resource(LevelResource(Level::Hard));
                 next_state.set(AppState::InGame);
             }
             Interaction::Hovered => {
@@ -45,8 +47,6 @@ pub fn button_system(
 }
 
 pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(Camera2dBundle::default());
-
     commands
         .spawn(
             (NodeBundle {
@@ -97,14 +97,15 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                 })
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(
-                        "Button",
+                        "スタート",
                         TextStyle {
-                            font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                            font: asset_server.load("fonts/ShinRetroMaruGothic-R.ttf"),
                             font_size: 72.0,
                             color: Color::rgb(0.9, 0.9, 0.9),
                         },
                     ));
-                });
+                })
+                .insert(MainMenuUI);
         })
         .insert(MainMenuUI);
 }
