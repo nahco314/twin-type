@@ -234,7 +234,7 @@ pub fn update_listen_kb(
                     },
                 });
 
-                // return;
+                return;
             }
 
             let mut cur_r = romaji.0.clone();
