@@ -185,7 +185,7 @@ pub fn start_ingame(
         });
 
     commands.insert_resource(StartTime(Instant::now()));
-    commands.insert_resource(GameTime(5));
+    commands.insert_resource(GameTime(60));
 
     commands.insert_resource(LevelResource(Level::Easy));
     commands.insert_resource(UsedWordIndexes(vec![]));

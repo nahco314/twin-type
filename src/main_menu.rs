@@ -66,7 +66,7 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                 TextBundle::from_section(
                     "Twin Type",
                     TextStyle {
-                        font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                        font: asset_server.load("fonts/ShinRetroMaruGothic-R.ttf"),
                         font_size: 300.0,
                         ..default()
                     },
