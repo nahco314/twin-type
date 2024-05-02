@@ -1,6 +1,4 @@
-use crate::in_game::{
-    LevelResource, ProblemCurrentRomajiText, ProblemHiraganaText, ProblemTitleText, UsedWordIndexes,
-};
+use crate::in_game::{Level, LevelResource, ProblemCurrentRomajiText, ProblemHiraganaText, ProblemTitleText, UsedWordIndexes};
 use crate::AppState;
 use bevy::app::App;
 use bevy::ecs::system::RunSystemOnce;
@@ -61,12 +59,12 @@ fn update_hiragana_ui(
     text.sections[0].value = hiragana.to_string();
 }
 
-fn make_sec(c: char, is_confirmed: bool) -> TextSection {
+fn make_sec(c: char, is_confirmed: bool, is_easy: bool) -> TextSection {
     let sharing = get_sharing();
     let player = sharing
         .get(&key_char_to_num(c.to_uppercase().to_string().chars().next().unwrap()).unwrap())
         .unwrap();
-    let color = match player {
+    let color = if is_easy {match player {
         Player::Left => {
             if is_confirmed {
                 Color::rgb(0.4, 0.0, 0.0)
@@ -81,6 +79,12 @@ fn make_sec(c: char, is_confirmed: bool) -> TextSection {
                 Color::rgb(0.6, 0.6, 1.0)
             }
         }
+    } } else {
+        if is_confirmed {
+                Color::rgb(0.4, 0.4, 0.4)
+            } else {
+                Color::rgb(0.8, 0.8, 0.8)
+            }
     };
 
     TextSection {
@@ -96,6 +100,7 @@ fn make_sec(c: char, is_confirmed: bool) -> TextSection {
 fn update_romaji_ui(
     In((hiragana, romaji)): In<(String, String)>,
     mut query: Query<&mut Text, With<ProblemCurrentRomajiText>>,
+    level: Res<LevelResource>,
 ) {
     let mut text = query.single_mut();
 
@@ -123,8 +128,8 @@ fn update_romaji_ui(
     }
 
     let mut secs = vec![];
-    secs.extend(confirmed_romajis.iter().map(|c| make_sec(*c, true)));
-    secs.extend(rest_romajis.iter().map(|c| make_sec(*c, false)));
+    secs.extend(confirmed_romajis.iter().map(|c| make_sec(*c, true, level.0 == Level::Easy)));
+    secs.extend(rest_romajis.iter().map(|c| make_sec(*c, false, level.0 == Level::Easy)));
     text.sections = secs;
 }
 

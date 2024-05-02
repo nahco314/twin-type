@@ -11,7 +11,7 @@ pub fn setup_fps_text(mut commands: Commands, asset_server: Res<AssetServer>) {
         TextBundle::from_sections([TextSection::new(
             "000.00",
             TextStyle {
-                font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+                font: asset_server.load("fonts/ShinRetroMaruGothic-R.ttf"),
                 font_size: 60.0,
                 ..default()
             },

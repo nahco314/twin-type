@@ -7,6 +7,7 @@ pub fn choice_word(level: Level, used_word_indexes: &Vec<usize>) -> (String, Str
         Level::Easy => EASY_WORDS.iter().collect(),
         Level::Medium => MEDIUM_WORDS.iter().collect(),
         Level::Hard => HARD_WORDS.iter().collect(),
+        Level::ExtraHard => EXTRA_HARD_WORDS.iter().collect(),
     };
 
     let mut rng = rand::thread_rng();

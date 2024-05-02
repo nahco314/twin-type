@@ -15,6 +15,15 @@ use bevy::{
 #[derive(Component)]
 pub struct MainMenuUI;
 
+#[derive(Component)]
+pub struct NormalButton;
+
+#[derive(Component)]
+pub struct HardButton;
+
+#[derive(Component)]
+pub struct ExtraHardButton;
+
 pub fn main_menu_button_system(
     mut commands: Commands,
     mut interaction_query: Query<
@@ -30,10 +39,8 @@ pub fn main_menu_button_system(
     mut next_state: ResMut<NextState<AppState>>,
 ) {
     for (interaction, mut color, mut border_color, children) in &mut interaction_query {
-        let mut text = text_query.get_mut(children[0]).unwrap();
         match *interaction {
             Interaction::Pressed => {
-                commands.insert_resource(LevelResource(Level::Hard));
                 next_state.set(AppState::InGame);
             }
             Interaction::Hovered => {
@@ -42,6 +49,72 @@ pub fn main_menu_button_system(
             Interaction::None => {
                 border_color.0 = Color::BLACK;
             }
+        }
+    }
+}
+
+pub fn main_menu_normal_button_system(
+    mut commands: Commands,
+    mut interaction_query: Query<
+        (
+            &Interaction,
+            &mut BackgroundColor,
+            &mut BorderColor,
+            &Children,
+        ),
+        (Changed<Interaction>, With<Button>, With<MainMenuUI>, With<NormalButton>),
+    >,
+) {
+    for (interaction, mut color, mut border_color, children) in &mut interaction_query {
+        match *interaction {
+            Interaction::Pressed => {
+                commands.insert_resource(LevelResource(Level::Easy));
+            }
+            _ => {}
+        }
+    }
+}
+
+pub fn main_menu_hard_button_system(
+    mut commands: Commands,
+    mut interaction_query: Query<
+        (
+            &Interaction,
+            &mut BackgroundColor,
+            &mut BorderColor,
+            &Children,
+        ),
+        (Changed<Interaction>, With<Button>, With<MainMenuUI>, With<HardButton>),
+    >,
+) {
+    for (interaction, mut color, mut border_color, children) in &mut interaction_query {
+        match *interaction {
+            Interaction::Pressed => {
+                commands.insert_resource(LevelResource(Level::Hard));
+            }
+            _ => {}
+        }
+    }
+}
+
+pub fn main_menu_extra_hard_button_system(
+    mut commands: Commands,
+    mut interaction_query: Query<
+        (
+            &Interaction,
+            &mut BackgroundColor,
+            &mut BorderColor,
+            &Children,
+        ),
+        (Changed<Interaction>, With<Button>, With<MainMenuUI>, With<ExtraHardButton>),
+    >,
+) {
+    for (interaction, mut color, mut border_color, children) in &mut interaction_query {
+        match *interaction {
+            Interaction::Pressed => {
+                commands.insert_resource(LevelResource(Level::ExtraHard));
+            }
+            _ => {}
         }
     }
 }
@@ -73,7 +146,7 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                 )
                 .with_text_alignment(TextAlignment::Center)
                 .with_style(Style {
-                    top: Val::Percent(-25.0),
+                    top: Val::Percent(-18.0),
                     ..default()
                 }),
             );
@@ -89,6 +162,7 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         justify_content: JustifyContent::Center,
                         // vertically center child text
                         align_items: AlignItems::Center,
+                        top: Val::Percent(-15.0),
                         ..default()
                     },
                     border_color: BorderColor(Color::BLACK),
@@ -97,7 +171,7 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                 })
                 .with_children(|parent| {
                     parent.spawn(TextBundle::from_section(
-                        "スタート",
+                        "ノーマル",
                         TextStyle {
                             font: asset_server.load("fonts/ShinRetroMaruGothic-R.ttf"),
                             font_size: 72.0,
@@ -105,7 +179,66 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         },
                     ));
                 })
-                .insert(MainMenuUI);
+                .insert(MainMenuUI).insert(NormalButton);
+        })
+        .with_children(|parent| {
+            parent
+                .spawn(ButtonBundle {
+                    style: Style {
+                        width: Val::Px(300.0),
+                        height: Val::Px(120.0),
+                        border: UiRect::all(Val::Px(5.0)),
+                        // horizontally center child text
+                        justify_content: JustifyContent::Center,
+                        // vertically center child text
+                        align_items: AlignItems::Center,
+                        top: Val::Percent(-15.0),
+                        ..default()
+                    },
+                    border_color: BorderColor(Color::BLACK),
+                    background_color: BackgroundColor(Color::rgb(0.2, 0.2, 0.2)),
+                    ..default()
+                })
+                .with_children(|parent| {
+                    parent.spawn(TextBundle::from_section(
+                        "ハード",
+                        TextStyle {
+                            font: asset_server.load("fonts/ShinRetroMaruGothic-R.ttf"),
+                            font_size: 72.0,
+                            color: Color::rgb(0.9, 0.9, 0.9),
+                        },
+                    ));
+                })
+                .insert(MainMenuUI).insert(HardButton);
+        }).with_children(|parent| {
+            parent
+                .spawn(ButtonBundle {
+                    style: Style {
+                        width: Val::Px(300.0),
+                        height: Val::Px(120.0),
+                        border: UiRect::all(Val::Px(5.0)),
+                        // horizontally center child text
+                        justify_content: JustifyContent::Center,
+                        // vertically center child text
+                        align_items: AlignItems::Center,
+                        top: Val::Percent(-15.0),
+                        ..default()
+                    },
+                    border_color: BorderColor(Color::BLACK),
+                    background_color: BackgroundColor(Color::rgb(0.2, 0.2, 0.2)),
+                    ..default()
+                })
+                .with_children(|parent| {
+                    parent.spawn(TextBundle::from_section(
+                        "超ハード",
+                        TextStyle {
+                            font: asset_server.load("fonts/ShinRetroMaruGothic-R.ttf"),
+                            font_size: 72.0,
+                            color: Color::rgb(0.9, 0.9, 0.9),
+                        },
+                    ));
+                })
+                .insert(MainMenuUI).insert(ExtraHardButton);
         })
         .insert(MainMenuUI);
 }

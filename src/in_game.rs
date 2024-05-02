@@ -29,11 +29,12 @@ pub struct ListenResource {
     rx: Receiver<KBEvent>,
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq)]
 pub enum Level {
     Easy,
     Medium,
     Hard,
+    ExtraHard,
 }
 
 #[derive(Resource)]
@@ -187,7 +188,6 @@ pub fn start_ingame(
     commands.insert_resource(StartTime(Instant::now()));
     commands.insert_resource(GameTime(60));
 
-    commands.insert_resource(LevelResource(Level::Easy));
     commands.insert_resource(UsedWordIndexes(vec![]));
     commands.insert_resource(History { list: vec![] });
 }
