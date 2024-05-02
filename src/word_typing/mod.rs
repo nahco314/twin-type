@@ -1,4 +1,7 @@
-use crate::in_game::{Level, LevelResource, ProblemCurrentRomajiText, ProblemHiraganaText, ProblemTitleText, UsedWordIndexes};
+use crate::in_game::{
+    Level, LevelResource, ProblemCurrentRomajiText, ProblemHiraganaText, ProblemTitleText,
+    UsedWordIndexes,
+};
 use crate::AppState;
 use bevy::app::App;
 use bevy::ecs::system::RunSystemOnce;
@@ -64,27 +67,29 @@ fn make_sec(c: char, is_confirmed: bool, is_easy: bool) -> TextSection {
     let player = sharing
         .get(&key_char_to_num(c.to_uppercase().to_string().chars().next().unwrap()).unwrap())
         .unwrap();
-    let color = if is_easy {match player {
-        Player::Left => {
-            if is_confirmed {
-                Color::rgb(0.4, 0.0, 0.0)
-            } else {
-                Color::rgb(1.0, 0.6, 0.6)
+    let color = if is_easy {
+        match player {
+            Player::Left => {
+                if is_confirmed {
+                    Color::rgb(0.4, 0.0, 0.0)
+                } else {
+                    Color::rgb(1.0, 0.6, 0.6)
+                }
+            }
+            Player::Right => {
+                if is_confirmed {
+                    Color::rgb(0.0, 0.0, 0.4)
+                } else {
+                    Color::rgb(0.6, 0.6, 1.0)
+                }
             }
         }
-        Player::Right => {
-            if is_confirmed {
-                Color::rgb(0.0, 0.0, 0.4)
-            } else {
-                Color::rgb(0.6, 0.6, 1.0)
-            }
-        }
-    } } else {
+    } else {
         if is_confirmed {
-                Color::rgb(0.4, 0.4, 0.4)
-            } else {
-                Color::rgb(0.8, 0.8, 0.8)
-            }
+            Color::rgb(0.4, 0.4, 0.4)
+        } else {
+            Color::rgb(0.8, 0.8, 0.8)
+        }
     };
 
     TextSection {
@@ -128,8 +133,16 @@ fn update_romaji_ui(
     }
 
     let mut secs = vec![];
-    secs.extend(confirmed_romajis.iter().map(|c| make_sec(*c, true, level.0 == Level::Easy)));
-    secs.extend(rest_romajis.iter().map(|c| make_sec(*c, false, level.0 == Level::Easy)));
+    secs.extend(
+        confirmed_romajis
+            .iter()
+            .map(|c| make_sec(*c, true, level.0 == Level::Easy)),
+    );
+    secs.extend(
+        rest_romajis
+            .iter()
+            .map(|c| make_sec(*c, false, level.0 == Level::Easy)),
+    );
     text.sections = secs;
 }
 

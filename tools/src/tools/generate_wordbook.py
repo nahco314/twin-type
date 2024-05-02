@@ -133,9 +133,7 @@ def main() -> None:
 
 ねぇ、どっかに置いてきたような/ねぇ、どっかにおいてきたような/Vaundy - 踊り子
 
-間違いだって起こしちゃおうと誘う、坂道。/まちがいだっておこしちゃおうとさそう、さかみち。/wowaka -
-
-ローリンガール
+間違いだって起こしちゃおうと誘う、坂道。/まちがいだっておこしちゃおうとさそう、さかみち。/wowaka - ローリンガール
 
 「君の言うロジック、証明できたって何になるの？」/きみのいうろじっく、しょうめいできたってなにになるの/Oh No Darkness!! - フレア
 
@@ -165,7 +163,7 @@ def main() -> None:
 
     res += f"pub const EXTRA_HARD_WORDS: [(&str, &str, &str); {len(extra_level_lst)}] = [\n"
     for word in extra_level_lst:
-        res += f"    (\"{word[0]}\", \"{word[0]}\", \"\"),\n"
+        res += f"    (\"{word[0]}\", \"{word[1]}\", \"{word[2]}\"),\n"
     res += "];\n\n"
 
     print(res)

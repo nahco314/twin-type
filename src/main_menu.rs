@@ -62,7 +62,12 @@ pub fn main_menu_normal_button_system(
             &mut BorderColor,
             &Children,
         ),
-        (Changed<Interaction>, With<Button>, With<MainMenuUI>, With<NormalButton>),
+        (
+            Changed<Interaction>,
+            With<Button>,
+            With<MainMenuUI>,
+            With<NormalButton>,
+        ),
     >,
 ) {
     for (interaction, mut color, mut border_color, children) in &mut interaction_query {
@@ -84,7 +89,12 @@ pub fn main_menu_hard_button_system(
             &mut BorderColor,
             &Children,
         ),
-        (Changed<Interaction>, With<Button>, With<MainMenuUI>, With<HardButton>),
+        (
+            Changed<Interaction>,
+            With<Button>,
+            With<MainMenuUI>,
+            With<HardButton>,
+        ),
     >,
 ) {
     for (interaction, mut color, mut border_color, children) in &mut interaction_query {
@@ -106,7 +116,12 @@ pub fn main_menu_extra_hard_button_system(
             &mut BorderColor,
             &Children,
         ),
-        (Changed<Interaction>, With<Button>, With<MainMenuUI>, With<ExtraHardButton>),
+        (
+            Changed<Interaction>,
+            With<Button>,
+            With<MainMenuUI>,
+            With<ExtraHardButton>,
+        ),
     >,
 ) {
     for (interaction, mut color, mut border_color, children) in &mut interaction_query {
@@ -179,7 +194,8 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         },
                     ));
                 })
-                .insert(MainMenuUI).insert(NormalButton);
+                .insert(MainMenuUI)
+                .insert(NormalButton);
         })
         .with_children(|parent| {
             parent
@@ -209,8 +225,10 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         },
                     ));
                 })
-                .insert(MainMenuUI).insert(HardButton);
-        }).with_children(|parent| {
+                .insert(MainMenuUI)
+                .insert(HardButton);
+        })
+        .with_children(|parent| {
             parent
                 .spawn(ButtonBundle {
                     style: Style {
@@ -238,7 +256,8 @@ pub fn setup_main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
                         },
                     ));
                 })
-                .insert(MainMenuUI).insert(ExtraHardButton);
+                .insert(MainMenuUI)
+                .insert(ExtraHardButton);
         })
         .insert(MainMenuUI);
 }

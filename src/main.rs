@@ -19,7 +19,10 @@ use crate::in_game::{
     check_time, create_mistype_effect, exit_in_game, setup_listen_kb, start_ingame,
     update_listen_kb, update_mistype_effect, History, Level, LevelResource, UsedWordIndexes,
 };
-use crate::main_menu::{exit_main_menu, main_menu_button_system, setup_main_menu, MainMenuUI, main_menu_normal_button_system, main_menu_hard_button_system, main_menu_extra_hard_button_system};
+use crate::main_menu::{
+    exit_main_menu, main_menu_button_system, main_menu_extra_hard_button_system,
+    main_menu_hard_button_system, main_menu_normal_button_system, setup_main_menu, MainMenuUI,
+};
 use crate::result_screen::{exit_result_screen, result_screen_button_system, start_result_screen};
 use crate::show_fps::{setup_fps_text, update_fps_text};
 use crate::status_board::{create_status_board, update_remaining_time, update_score};
@@ -63,17 +66,17 @@ fn main() {
             Update,
             main_menu_button_system.run_if(in_state(AppState::MainMenu)),
         )
-                .add_systems(
-                    Update,
-                    main_menu_normal_button_system.run_if(in_state(AppState::MainMenu)),
+        .add_systems(
+            Update,
+            main_menu_normal_button_system.run_if(in_state(AppState::MainMenu)),
         )
-                .add_systems(
-                    Update,
-                    main_menu_hard_button_system.run_if(in_state(AppState::MainMenu)),
+        .add_systems(
+            Update,
+            main_menu_hard_button_system.run_if(in_state(AppState::MainMenu)),
         )
-                .add_systems(
-                    Update,
-                    main_menu_extra_hard_button_system.run_if(in_state(AppState::MainMenu)),
+        .add_systems(
+            Update,
+            main_menu_extra_hard_button_system.run_if(in_state(AppState::MainMenu)),
         )
         .add_systems(Update, update_listen_kb.run_if(in_state(AppState::InGame)))
         .add_systems(Update, update_problem_ui.run_if(in_state(AppState::InGame)))
